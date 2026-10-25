@@ -196,7 +196,7 @@ try:
     plt.figure(figsize=(16, 9))
     plt.suptitle('Imformações Sobre: Crimes Violentos Letais Intencionais (CVLI)', fontsize=14)
 
-    # 1ª posição - 
+    # 1ª posição - Distribuição
     plt.subplot(2, 2, 1)
     plt.boxplot(df_cvli['cvli'], orientation='horizontal', showmeans=True) 
     plt.title('Distribuição das ocorrências por Batalhões')
