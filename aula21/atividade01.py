@@ -183,12 +183,8 @@ o que indica poucos batalhões com valores altos puxam a média para cima.
 -   Não há outliers inferiores: o limite inferior de {limite_inferior} é negativo, e está abaixo do Minimo que é de {minimo}.
 ''')
 
-
-
-
 except Exception as e:
     print(f'Erro ao mostrar medidas - {e}')
-
 
 
 try:
@@ -237,7 +233,6 @@ try:
         .sort_values(by='cvli')
          
     )
-    #plt.barh(df_cvli_10maiores['aisp'], df_cvli_10maiores['cvli'])
     plt.bar(df_cvli_10maiores['aisp'].astype(str), df_cvli_10maiores['cvli'])
     plt.xlabel('Nº de batalhões')
     plt.ylabel('Nº de Casos de CVLI')
@@ -250,7 +245,6 @@ try:
     plt.xlabel('Nº de batalhões')
     plt.ylabel('Nº de Casos de CVLI')
 
-    
     
     plt.show()
 
