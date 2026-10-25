@@ -120,7 +120,7 @@ try:
     # Variancia
     # É uma medida para observar a disperção dos dados
     # Observa-se em relação a média
-    # É a média dos quadrados das fiferenças entre cada valor e a média
+    # É a média dos quadrados das diferenças entre cada valor e a média
     # OBS: O resultado da variância está elevado ao quadrado
     variancia = np.var(array_roubo_veiculo)
 
