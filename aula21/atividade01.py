@@ -16,6 +16,14 @@ try:
     df_cvli = df_ocorrencias[['aisp', 'cvli']]
     
     df_cvli = df_cvli.groupby('aisp', as_index=False)['cvli'].sum()
+
+    # Total
+    total_cvli = df_cvli['cvli'].sum()
+
+    # Percentual
+    df_cvli['percentual %'] = round(
+        ((df_cvli['cvli'] / total_cvli) * 100), 2
+    )
     
     print(f'''
 -------------------------------------------
@@ -56,8 +64,14 @@ try:
     desvio_padrao = np.std(array_cvli)
     coef_variacao = (desvio_padrao / media_cvli) * 100
 
+    # Verificando a Assimetria e Curtose da Distribuição
+    assimetria = df_cvli['cvli'].skew()
+    curtose = df_cvli['cvli'].kurtosis()
+
 except Exception as e:
     print(f'Erro ao obter Medidas - {e}')
+    print(f'Linha: {e.__traceback__.tb_lineno}')
+
 
 
 # Maiores e menores ocorrencias
@@ -137,22 +151,26 @@ Monstrando Medidas
 ------------------
 
 Minimo: {minimo}')
-Limite Inferior: {limite_inferior}')
+Limite Inferior: {limite_inferior}
 Q1: {q1}')
 Q2: {q2}')
 Q3: {q3}')
-Limite Superior: {limite_superior}')
-Maximo: {maximo}')
+Limite Superior: {limite_superior}
+Maximo: {maximo}
+Total de CVLI: {total_cvli}
 
-Média: {media_cvli:.2f}')
-Mediana: {mediana_cvli}')
-Distancia Entre Média e Mediana: {distancia_media_mediana:.2f}%')
+Média: {media_cvli:.2f}
+Mediana: {mediana_cvli}
+Distancia Entre Média e Mediana: {distancia_media_mediana:.2f}%
 IQR: {iqr}')
-Amplitude: {amplitude}')
-Variância: {variancia:.2f}')
-Distancia Variancia Média: {distancia_var_media:.2f}%')
-Disvio Padrão: {desvio_padrao:.2f}')
-Coeficiente de Variação: {coef_variacao:.2f}%')
+Amplitude: {amplitude}
+Variância: {variancia:.2f}
+Distancia Variancia Média: {distancia_var_media:.2f}%
+Disvio Padrão: {desvio_padrao:.2f}
+Coeficiente de Variação: {coef_variacao:.2f}%
+
+Assimetria: {assimetria:.2f}
+Curtose: {curtose:.2f}
 ''')
 
 
@@ -186,9 +204,8 @@ o que indica poucos batalhões com valores altos puxam a média para cima.
 except Exception as e:
     print(f'Erro ao mostrar medidas - {e}')
 
-
+# Gráfico
 try:
-    # Gráfico
     plt.figure(figsize=(16, 9))
     plt.suptitle('Imformações Sobre: Crimes Violentos Letais Intencionais (CVLI)', fontsize=14)
 
@@ -238,15 +255,27 @@ try:
     plt.ylabel('Nº de Casos de CVLI')
 
 
-    # 4ª posição - Os Outliers Superiores
+    # 4ª Histograma
     plt.subplot(2, 2, 4)
-    plt.title('Batalhões com ocorrências muito acima dos demais')
-    plt.bar(df_cvli_outliers_maiores['aisp'].astype(str), df_cvli_outliers_maiores['cvli'], color='firebrick')
-    plt.xlabel('Nº de batalhões')
-    plt.ylabel('Nº de Casos de CVLI')
-
+    plt.title('')
+    plt.hist(array_cvli, bins=100, edgecolor='black')
+    plt.axvline(media_cvli, color='green', linewidth=1) # Média
+    plt.axvline(mediana_cvli, color='orange', linewidth=1) # Mediana
+    plt.xlabel('Limites')
+    plt.ylabel('Contagens')
     
     plt.show()
+
+    contagens, limites = np.histogram(array_cvli, bins=100)
+
+    print(f'\nFixas de CVLI do Histograma')
+    for i in range(len(contagens)):
+        if contagens[i] > 0:
+            print(
+                f'Faixa {i+1}: '
+                f'{limites [i]:.0f} até {limites[i+1]:.0f} CVLIs:  '
+                f'=> {contagens[i]} batalhões'
+            )
 
 except Exception as e:
     print(f'Erro ao gerar o painel - {e}')
